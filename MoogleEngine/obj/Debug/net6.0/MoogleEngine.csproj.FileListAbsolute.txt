@@ -1,0 +1,12 @@
+C:\CC22\CC22\Moogle\Moogle salva\moogle-main\MoogleEngine\bin\Debug\net6.0\MoogleEngine.deps.json
+C:\CC22\CC22\Moogle\Moogle salva\moogle-main\MoogleEngine\bin\Debug\net6.0\MoogleEngine.dll
+C:\CC22\CC22\Moogle\Moogle salva\moogle-main\MoogleEngine\bin\Debug\net6.0\MoogleEngine.pdb
+C:\CC22\CC22\Moogle\Moogle salva\moogle-main\MoogleEngine\obj\Debug\net6.0\MoogleEngine.csproj.AssemblyReference.cache
+C:\CC22\CC22\Moogle\Moogle salva\moogle-main\MoogleEngine\obj\Debug\net6.0\MoogleEngine.GeneratedMSBuildEditorConfig.editorconfig
+C:\CC22\CC22\Moogle\Moogle salva\moogle-main\MoogleEngine\obj\Debug\net6.0\MoogleEngine.AssemblyInfoInputs.cache
+C:\CC22\CC22\Moogle\Moogle salva\moogle-main\MoogleEngine\obj\Debug\net6.0\MoogleEngine.AssemblyInfo.cs
+C:\CC22\CC22\Moogle\Moogle salva\moogle-main\MoogleEngine\obj\Debug\net6.0\MoogleEngine.csproj.CoreCompileInputs.cache
+C:\CC22\CC22\Moogle\Moogle salva\moogle-main\MoogleEngine\obj\Debug\net6.0\MoogleEngine.dll
+C:\CC22\CC22\Moogle\Moogle salva\moogle-main\MoogleEngine\obj\Debug\net6.0\refint\MoogleEngine.dll
+C:\CC22\CC22\Moogle\Moogle salva\moogle-main\MoogleEngine\obj\Debug\net6.0\MoogleEngine.pdb
+C:\CC22\CC22\Moogle\Moogle salva\moogle-main\MoogleEngine\obj\Debug\net6.0\ref\MoogleEngine.dll

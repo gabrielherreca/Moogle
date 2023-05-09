@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "NSINAxylHLbDZpnn9ntWp8EMZs8eZCNyPa23L8D7hlbu3Z+VjYx2Dk7Hyt8QmEOItj6oIoA0VtZwwc9i6piKpw==",
+  "success": true,
+  "projectFilePath": "C:\\CC22\\CC22\\Moogle\\Moogle salva\\moogle-main\\MoogleServer\\MoogleServer.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Gabriel\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.13\\microsoft.netcore.app.ref.6.0.13.nupkg.sha512",
+    "C:\\Users\\Gabriel\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.13\\microsoft.windowsdesktop.app.ref.6.0.13.nupkg.sha512",
+    "C:\\Users\\Gabriel\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.13\\microsoft.aspnetcore.app.ref.6.0.13.nupkg.sha512",
+    "C:\\Users\\Gabriel\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.13\\microsoft.netcore.app.host.win-x64.6.0.13.nupkg.sha512"
+  ],
+  "logs": []
+}
