@@ -15,7 +15,7 @@ public class SearchItem
         {   
             if(!float.IsNaN(Scores[i]) && (Scores[i] != 0)) 
             {  
-                SearchItem si = new SearchItem( LoadDocuments.Titles()[i],LoadDocuments.ListOfSnippets(query)[i]+ Scores[i].ToString() , Scores[i]);
+                SearchItem si = new SearchItem( LoadDocuments.Titles()[i],LoadDocuments.ListOfSnippets(query)[i], Scores[i]);
                 SearchItemsList.Add(si);
             }
 
