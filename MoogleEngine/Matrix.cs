@@ -18,7 +18,7 @@ public class Matrix
 public static List<Vector> ListForMatrix()
     { List<Vector> Matrix = new List<Vector>();
         {
-            foreach(Dictionary<string,decimal> dictionary in LoadDocuments.DictionaryMatrix )
+            foreach(Dictionary<string,decimal> dictionary in LoadDocuments.DictionaryTFIDF() )
             {   Vector v = new Vector(dictionary);
                 Matrix.Add(v);
             }
