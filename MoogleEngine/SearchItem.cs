@@ -19,7 +19,7 @@ public class SearchItem
                 SearchItemsList.Add(si);
             }
 
-            SortByScoreDescending(SearchItemsList);
+          
             
         }
         return SearchItemsList;
