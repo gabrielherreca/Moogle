@@ -4,39 +4,12 @@ namespace MoogleEngine;
 
 public class LoadDocuments
 
-{   //Devueve cada texto en en string
-    public static List <string> LoadList = Load();
-
-    //Devulve la cantidad de documntos
-    public static int DocumentCount = LoadList.Count;
-
-    //Devuelve la ruta de cada documento
-
-    public static List <string> TitleOfDocuments = Titles();
-
-    // Devuelve el vocabulario entre todos los documentos
-
-    public static List<string> Corpus = Vocabulary();
-
-    //Devulve cada documento normalizado
-
-    public static List<List<string>> NormalizedDocuments = DocumetList();
-
-    //Devuelve una lista de diccionarios con los tf idf
-
-    public static List<Dictionary<string,decimal>> DictionaryMatrix = DictionaryTFIDF();
-
-    // Diccionario con el idf de cada palabra Vocabulario
-    public static Dictionary<string,decimal> CorpusIDF = VocabularyIDF(); 
-
-
-    
-    
+{   
 
     /*Metodo load para cargar documentos que devuelve una lista de strings con cada documento en un string*/ 
     public static List<string> Load()
     {
-        string[] directory = Directory.GetFiles(@"..\Content" ,"*.txt");
+        string[] directory = Directory.GetFiles(@"../Content" ,"*.txt");
         List<string> Documents = new List<string>();
 
         foreach (string document in directory)
@@ -50,15 +23,203 @@ public class LoadDocuments
         return Documents;
     }
 
-    public static List <string> Titles()
-    {   List<string> titles = new List<string>();
-        string[] directory = Directory.GetFiles(@"..\Content","*.txt");
-        foreach(string title in directory)
-        {
-            titles.Add(title);
-        }
-      return titles;  
+     public static List<string> Normalize(string text)
+    {    List<string> listWords = new List<string>();         
+         char[] spliters = { ' ', '\n', '\t', ',', '.', ':', ';' };
+         string[] words = text.Split(spliters); 
+         string texto;
+        
+         foreach(string word in words)
+         {             
+                foreach (char c in word)
+            {
+                if (char.IsLetterOrDigit(c))
+                {
+                    texto = Regex.Replace(word, @"[^\w\s]", "");          
+                    listWords.Add(texto.ToLower()); 
+                    break;
+                }
+                                                                
+            }
+         }
+     
+      return listWords;     
     }
+
+     public static List<List<string>> DocumetList()
+    {   List<List<string>> DocumentList = new List<List<string>>();
+        List <string> documentos = Load();
+        foreach(string document in documentos)
+        {    
+            List<string> Document = (Normalize(document));
+            DocumentList.Add(Document);
+            
+        }
+      return DocumentList;  
+    } 
+
+    // Metodo que saca el vocabulario de todos los documentos 
+ public static HashSet<string> Vocabulary ()
+    {  HashSet<string> vocabulary = new HashSet<string>();
+        int loadcount = Load().Count;
+        List <string> documentos = Load();
+              for (int i = 0; i < loadcount; i++)
+              {
+                    foreach(string word in Normalize(documentos[i]))
+                    {
+                        vocabulary.Add(word);
+                    }
+              }
+                         
+       
+      return vocabulary;  
+    } 
+
+    public static  HashSet<string> DocumentVocabulary(string document) 
+ {
+    HashSet<string> vocabulary = new HashSet<string>();
+    foreach(string word in Normalize(document))
+    {
+                        vocabulary.Add(word);
+    }
+     return vocabulary;   
+ }
+
+  public static List<HashSet<string>> AllDocumentVocabulary() 
+ {  List<HashSet<string>> AllDocumentVocabulary  = new List<HashSet<string>>();
+     List <string> documentos = Load();
+   
+    foreach(string document in documentos)
+    {    
+          AllDocumentVocabulary.Add(DocumentVocabulary(document));
+    }
+    return AllDocumentVocabulary;   
+ }  
+    
+       public static Dictionary<string, decimal> IDF()
+        {
+
+                     
+            Dictionary<string, decimal> idf = new  Dictionary<string, decimal>() ;
+            
+            foreach (string word in Vocabulary())
+            {
+                
+                 idf.Add(word,0);
+            }
+           
+            HashSet<string> V = Vocabulary();
+            int documentos = Load().Count;
+            
+            foreach (string texto in Load())
+            {   
+                HashSet<string> palabrasTexto = new HashSet<string>(Normalize(texto));
+
+                foreach (string palabra in V)
+                {       
+                    if (palabrasTexto.Contains(palabra))
+                    {
+                        idf[palabra]++;
+                    }
+                }
+            }
+             
+            foreach(KeyValuePair<string,decimal> entrada in idf ) 
+         {  
+            decimal division = documentos/entrada.Value;
+           if (division==1)
+            {
+                 division = (decimal)(1.001);
+            }
+            
+            idf[entrada.Key] = (decimal) Math.Log10((double)(division)) ;
+            
+         } 
+         
+            return idf;
+        }
+
+      public static List<Dictionary<string, decimal>> TF()
+{
+    List<Dictionary<string, decimal>> repeticiones = new List<Dictionary<string, decimal>>();
+
+    foreach (List<string> texto in DocumetList())
+    {   decimal wordcount = texto.Count;
+        Dictionary<string, decimal> frecuencias = new Dictionary<string, decimal>();
+
+        foreach (string palabra in texto)
+        {
+            if (frecuencias.ContainsKey(palabra))
+            {
+                frecuencias[palabra] += 1/ wordcount;
+            }
+            else
+            {
+                frecuencias.Add(palabra, 1/ wordcount);
+            }
+        }
+
+        repeticiones.Add(frecuencias);
+    }
+
+    return repeticiones;
+}
+
+   
+      
+    public static List<Dictionary<string,decimal>> DictionaryTFIDF()
+    { 
+       List<Dictionary<string,decimal>> TFdic =  TF();
+
+       Dictionary<string,decimal> IDFdic= IDF();
+            
+       HashSet<string> corpus = Vocabulary();
+      
+       List<HashSet<string>> Documents = AllDocumentVocabulary();
+
+       int documnetCount = Load().Count;
+       
+      
+      
+       List<Dictionary<string, decimal>> values = new List<Dictionary<string, decimal>>();
+      
+
+          
+             
+             for (int i = 0; i < documnetCount ; i++)
+            {   Dictionary<string,decimal> document= new Dictionary<string, decimal>();
+                 foreach (string word in corpus)
+            {    
+                if(Documents[i].Contains(word))  
+                    {
+                        document.Add(word,TFdic[i][word] * IDFdic[word]);
+                    }
+          
+                else
+                    {
+                         document.Add(word,0);
+                    }
+                   
+               
+            }
+            
+            values.Add(document);
+        } 
+        
+     return values;
+        
+    }
+
+     public static List<string> Titles()
+{
+    List<string> titles = new List<string>();
+    string[] directory = Directory.GetFiles(@"../Content", "*.txt");
+    foreach (string title in directory)
+    {
+        titles.Add(Path.GetFileName(title));
+    }
+    return titles;
+}
 
     public static string GenerateSnippet(string word, string text)
 {
@@ -82,7 +243,7 @@ public class LoadDocuments
  public static List<string> ListOfSnippets(string query)
 {   List<string> ListOfSnippets = new List<string>();
 
-    foreach(string document in LoadList)
+    foreach(string document in Load())
     {
         ListOfSnippets.Add(GenerateSnippet(query,document));
     }
@@ -91,147 +252,57 @@ public class LoadDocuments
 
 
 
-     /*Metodo que por documento , elimina caracteres especiales y divide el texto en palabras y las devuelve en una lista de string*/
-     public static List<string> Normalize(string text)
-    {    List<string> listWords = new List<string>();         
-         char[] spliters = { ' ', '\n', '\t', ',', '.', ':', ';' };
-         string[] words = text.Split(spliters); 
-         string texto;
-        
-         foreach(string word in words)
-         {             
-                foreach (char c in word)
-            {
-                if (char.IsLetterOrDigit(c))
-                {
-                    texto = Regex.Replace(word, @"[^\w\s]", "");          
-                    listWords.Add(texto.ToLower()); 
-                    break;
-                }
-                                                                
-            }
-         }
-     
-      return listWords;     
-    }
-    
-    // Metodo de calcula TF de una palabra en un documento
-      public static decimal WordTF(string word , List<string> text)
-    {   decimal tf = 0 ;
-        foreach (string wordintext in text )
-        {
-            if (word == wordintext)
-            {
-                tf += 1;
-            }
-        }
-        tf = tf /text.Count;
-        return tf; 
-    }
-    // Metodo que calcula IDF de una plabra
-    public static decimal WordIdf(string word)
-    {   decimal idf = 0;
-       for (int i = 0; i < DocumentCount; i++)
-       {
-            for ( int j = 0; j < NormalizedDocuments[i].Count; j ++)
-            {
-                if (NormalizedDocuments[i].Contains(word))
-                {
-                  idf += 1;
-                  break;
-                }
-            }
-       }
-      idf =(decimal) Math.Log10((double)(DocumentCount/ idf));
-        return idf;
-    }
-    // Metodo que calcula TF IDF de una palabra 
-     public static decimal WordTfIdf(string word ,  List<string> text)
-     {  
-        decimal wordtfidf = WordTF(word, text)* CorpusIDF[word];
-        return wordtfidf;
-     }
+    public static Dictionary<string, decimal> TFOfDoc(List<string> wordList)
+{
+    Dictionary<string, decimal> tf = new Dictionary<string, decimal>();
+    decimal wordCount = wordList.Count;
 
-     public static Dictionary<string,decimal> VocabularyIDF()
-     {   Dictionary<string,decimal> VocabularyIDF = new Dictionary<string, decimal>();
-        foreach(string word in Corpus)
-        {
-            VocabularyIDF.Add(word,WordIdf(word));
-        }
-       return VocabularyIDF; 
-     }
-
-    //Metodo que crea un diccionario para un documento con cada palabra y su valor de tf idf asociado    
-     public static Dictionary<string,decimal> ValueDictionary(List<string> list)
+    foreach (string word in wordList)
     {
-        Dictionary< string, decimal> values = new Dictionary<string, decimal>();
-        foreach ( string word in Corpus)
+        if (tf.ContainsKey(word))
         {
-            if (list.Contains(word))
-            {
-                values.Add(word, WordIdf(word));
-                
+            tf[word] += 1 / wordCount;
+        }
+        else
+        {
+            tf.Add(word, 1/ wordCount);
+        }
+    }
+
+    return tf;
+}
+  
+
+    public static Dictionary<string,decimal> QueryTFIDF(string query)
+    {  Dictionary<string,decimal> QueryTFIDF = new Dictionary<string, decimal>();
+       HashSet<string> corpus = Vocabulary();
+       Dictionary<string,decimal> IDFdic= IDF();
+      
+       List<string> NormalizedQuery = Normalize(query);
+        Dictionary<string,decimal> TFdic= TFOfDoc(NormalizedQuery);
+       HashSet<string> VocabularyQuery = NormalizedQuery.ToHashSet();
+       
+      
+       foreach(string word in corpus )
+       {
+            if(VocabularyQuery.Contains(word))
+            {   
+                QueryTFIDF.Add(word,TFdic[word]*IDFdic[word] );
             }
             else
             {
-                values.Add(word,0);
+                QueryTFIDF.Add(word,0);
             }
-        }
-      return values;  
+       }
+
+       return QueryTFIDF;
+
     }
 
-
-    //Devuelve una lista de listas de string con cada documento normalizado en una lista  
-    public static List<List<string>> DocumetList()
-    {   List<List<string>> DocumentList = new List<List<string>>();
-        foreach(string document in Load())
-        {   List<string> Document = new List<string>();
-            Document = (Normalize(document));
-            DocumentList.Add(Document);
-            
-        }
-      return DocumentList;  
-    }
-
-    /* Devuelve una lista de diccionarios .Cada diccionario representa un 
-    docuemnto con cada palabra y su valor de tf idf asociado */   
-     public static List<Dictionary<string,decimal>> DictionaryTFIDF()
-    {   List<Dictionary<string,decimal>> DictionaryTFIDF = new List<Dictionary<string,decimal>>();
-        foreach(List<string> list in NormalizedDocuments)
-        {   
-            DictionaryTFIDF.Add(ValueDictionary(list));
-        }
-
-     return DictionaryTFIDF;
-    }
-
+    
+}
 
 
     
-    // Metodo que devuelve una lista normalizada de todas las palabras de lños documentos incluyendo repeticiones
-     public static List<string> NormalizeAll()
-    {   List<string> NormalizeAll = new List<string>();
-        for (int i = 0; i < Load().Count; i++)
-        {
-            foreach (string word in Normalize(Load()[i]))
-            {
-                NormalizeAll.Add(word);
-            }
-        }
-       return NormalizeAll; 
-    }
-    // Metodo que saca el vocabulario de todos los documentos 
- public static List<string> Vocabulary ()
-    {   List<string> vocabulary = new List<string>();
-        
-            foreach( string word in NormalizeAll())
-            {
-                if (!vocabulary.Contains(word))
-                {
-                    vocabulary.Add(word);
-                }
-            }
-       
-      return vocabulary;  
-    }   
-}
+
+ 
