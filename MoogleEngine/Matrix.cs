@@ -8,11 +8,15 @@ public class Matrix
 {
     private List<Vector> valores;
 
-    public static List<Vector> MatrixVector = ListForMatrix();
 
     public Matrix(List <Vector> valores)
     {
         this.valores = valores;
+    }
+
+     public List<Vector> GetVectores()
+    {
+        return valores;
     }
 
 public static List<Vector> ListForMatrix()
@@ -27,20 +31,24 @@ public static List<Vector> ListForMatrix()
     }
 
    
-      public static  List<float> CalcularSimilitudesCoseno(Vector vector , Matrix matrix)
+
+    public static float[] CalcularSimilitudesCoseno(Vector vector, Matrix matrix)
+{
+    List<Vector> vectores = matrix.GetVectores();
+    float[] similitudes = new float[vectores.Count];
+
+    for (int i = 0; i < similitudes.Length; i++)
     {
-        List<float> similitudes = new List<float>();
-
-        foreach(Vector otroVector in matrix.valores) 
-        
-           {
-                float similitud = vector.CalculateSimilitudCoseno(otroVector);
-                 similitudes.Add(similitud);
-           } 
-        
-
-        return similitudes;
+        Vector otroVector = vectores[i];
+        float similitud = vector.CalculateSimilitudCoseno(otroVector);
+        similitudes[i] = similitud;
     }
+
+    return similitudes;
+}
+
+   
+
 }
 
 
