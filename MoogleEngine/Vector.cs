@@ -36,17 +36,19 @@ public class Vector
     public decimal CalcularMagnitud()
     {
         decimal sumaCuadrados = 0;
-        foreach (var valor in valores.Values)
+        var values = this.valores;
+        foreach (var valor in values)
         {
-            sumaCuadrados += valor * valor;
+            sumaCuadrados += valor.Value * valor.Value;
         }
         return (decimal) Math.Sqrt((double) sumaCuadrados);
     }
     
+   
     public float CalculateSimilitudCoseno(Vector otroVector)
     {   
         float ScalarProduct = CalcularProductoPunto(otroVector);
-        float Magnitud = (float)CalcularProductoMagnitud(otroVector);
+        float Magnitud = (float) CalcularProductoMagnitud(otroVector);
         float similarity = ScalarProduct/Magnitud;
         return similarity;
     }
