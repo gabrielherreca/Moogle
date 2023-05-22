@@ -9,13 +9,14 @@ public class SearchItem
         this.Score = score;
     }
 
-    public static List<SearchItem> SearchItemsList(List<float> Scores , string query)
+    public static List<SearchItem> SearchItemsList(float[] Scores , string query)
     {   List<SearchItem> SearchItemsList = new List<SearchItem>();
-        for (int i = 0; i < Scores.Count; i++)
+        List<string> snippets = LoadDocuments.ListOfSnippets(query);
+        for (int i = 0; i < snippets.Count; i++)
         {   
             if(!float.IsNaN(Scores[i]) && (Scores[i] != 0)) 
             {  
-                SearchItem si = new SearchItem( LoadDocuments.Titles()[i],LoadDocuments.ListOfSnippets(query)[i], Scores[i]);
+                SearchItem si = new SearchItem( LoadDocuments.Titles()[i],snippets[i], Scores[i]);
                 SearchItemsList.Add(si);
             }
 
