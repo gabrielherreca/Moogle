@@ -4,7 +4,14 @@ namespace MoogleEngine;
 
 public class LoadDocuments
 
-{   
+{    
+    public static Dictionary <string,decimal> idf = IDF(); 
+    public static HashSet<string> Corpus = Vocabulary(); 
+    
+
+    
+    
+
 
     /*Metodo load para cargar documentos que devuelve una lista de strings con cada documento en un string*/ 
     public static List<string> Load()
@@ -96,48 +103,54 @@ public class LoadDocuments
     return AllDocumentVocabulary;   
  }  
     
-       public static Dictionary<string, decimal> IDF()
+
+
+   
+    
+      
+
+        public static Dictionary<string, decimal> IDF()
+{
+    Dictionary<string, decimal> idf = new Dictionary<string, decimal>();
+   
+    List<string> load = Load();
+    int documentos = load.Count;
+    HashSet <string> vocabulary = Vocabulary();
+
+    foreach (string word in vocabulary)
+    {
+        idf.Add(word, 0);
+    }
+
+    for (int i = 0; i < load.Count; i++)
+    {
+        HashSet<string> palabrasTexto = new HashSet<string>(Normalize(load[i]));
+
+        foreach (string palabra in vocabulary)
         {
-
-                     
-            Dictionary<string, decimal> idf = new  Dictionary<string, decimal>() ;
-            
-            foreach (string word in Vocabulary())
+            if (palabrasTexto.Contains(palabra))
             {
-                
-                 idf.Add(word,0);
+                idf.TryGetValue(palabra, out decimal value);
+                idf[palabra] = value + 1;
             }
-           
-            HashSet<string> V = Vocabulary();
-            int documentos = Load().Count;
-            
-            foreach (string texto in Load())
-            {   
-                HashSet<string> palabrasTexto = new HashSet<string>(Normalize(texto));
-
-                foreach (string palabra in V)
-                {       
-                    if (palabrasTexto.Contains(palabra))
-                    {
-                        idf[palabra]++;
-                    }
-                }
-            }
-             
-            foreach(KeyValuePair<string,decimal> entrada in idf ) 
-         {  
-            decimal division = documentos/entrada.Value;
-           if (division==1)
-            {
-                 division = (decimal)(1.001);
-            }
-            
-            idf[entrada.Key] = (decimal) Math.Log10((double)(division)) ;
-            
-         } 
-         
-            return idf;
         }
+    }
+
+    foreach (KeyValuePair<string, decimal> entrada in idf)
+    {
+        decimal division = documentos / entrada.Value;
+        if (division == 1)
+        {
+            division = (decimal)(1.001);
+        }
+
+        idf[entrada.Key] = (decimal)Math.Log10((double)(division));
+    }
+
+    return idf;
+}
+
+        
 
       public static List<Dictionary<string, decimal>> TF()
 {
@@ -165,19 +178,26 @@ public class LoadDocuments
     return repeticiones;
 }
 
+        
+
+          
    
-      
-    public static List<Dictionary<string,decimal>> DictionaryTFIDF()
+     
+
+    
+
+ public static List<Dictionary<string,decimal>> DictionaryTFIDF()
     { 
        List<Dictionary<string,decimal>> TFdic =  TF();
 
-       Dictionary<string,decimal> IDFdic= IDF();
+       Dictionary<string,decimal> IDFdic = idf ;
             
-       HashSet<string> corpus = Vocabulary();
       
        List<HashSet<string>> Documents = AllDocumentVocabulary();
 
        int documnetCount = Load().Count;
+
+      
        
       
       
@@ -188,7 +208,7 @@ public class LoadDocuments
              
              for (int i = 0; i < documnetCount ; i++)
             {   Dictionary<string,decimal> document= new Dictionary<string, decimal>();
-                 foreach (string word in corpus)
+                 foreach (string word in Corpus)
             {    
                 if(Documents[i].Contains(word))  
                     {
@@ -199,7 +219,8 @@ public class LoadDocuments
                     {
                          document.Add(word,0);
                     }
-                   
+           
+           
                
             }
             
@@ -209,6 +230,7 @@ public class LoadDocuments
      return values;
         
     }
+
 
      public static List<string> Titles()
 {
@@ -252,6 +274,13 @@ public class LoadDocuments
 
 
 
+     
+
+    
+
+
+    // Metodo de calcula TF de una palabra en un documento
+
     public static Dictionary<string, decimal> TFOfDoc(List<string> wordList)
 {
     Dictionary<string, decimal> tf = new Dictionary<string, decimal>();
@@ -271,33 +300,47 @@ public class LoadDocuments
 
     return tf;
 }
+
+
+
+
+
+
   
 
-    public static Dictionary<string,decimal> QueryTFIDF(string query)
-    {  Dictionary<string,decimal> QueryTFIDF = new Dictionary<string, decimal>();
-       HashSet<string> corpus = Vocabulary();
-       Dictionary<string,decimal> IDFdic= IDF();
+       public static Dictionary<string,decimal> QueryTFIDF(string query)
+    {  
+        Dictionary<string,decimal> QueryTFIDF = new Dictionary<string, decimal>();
       
+        
+         
        List<string> NormalizedQuery = Normalize(query);
         Dictionary<string,decimal> TFdic= TFOfDoc(NormalizedQuery);
        HashSet<string> VocabularyQuery = NormalizedQuery.ToHashSet();
+         Dictionary<string,decimal> IDFdic = idf;
+
+         foreach(string word in Corpus )
+         {
+            QueryTFIDF.Add(word,0);
+         }
+
+         foreach(string word in VocabularyQuery)
+         {  if (Corpus.Contains(word))
+         {
+            QueryTFIDF[word] = TFdic[word] * IDFdic[word];
+         }
+            
+         }
+       
        
       
-       foreach(string word in corpus )
-       {
-            if(VocabularyQuery.Contains(word))
-            {   
-                QueryTFIDF.Add(word,TFdic[word]*IDFdic[word] );
-            }
-            else
-            {
-                QueryTFIDF.Add(word,0);
-            }
-       }
-
        return QueryTFIDF;
 
     }
+
+   
+
+            
 
     
 }
