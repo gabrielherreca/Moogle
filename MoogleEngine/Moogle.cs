@@ -3,13 +3,13 @@ namespace MoogleEngine;
 
 public static class Moogle
 {   
-      static Matrix DocumentMatrix = new Matrix(Matrix.MatrixVector);     
+      static Matrix DocumentMatrix = new Matrix(Matrix.ListForMatrix());     
       public static SearchResult Query(string query) 
       {             
       
       Vector QueryVector = new Vector(LoadDocuments.QueryTFIDF(query));
       
-      List <float> Scores = Matrix.CalcularSimilitudesCoseno(QueryVector,DocumentMatrix);            
+      float[] Scores = Matrix.CalcularSimilitudesCoseno(QueryVector,DocumentMatrix);            
       
 
      
