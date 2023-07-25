@@ -1,0 +1,109 @@
+\documentclass{beamer}
+\usepackage{times}
+\usepackage[T1]{fontenc}
+\usepackage[parfill]{parskip}
+\usepackage[spanish]{babel}
+\title{Presentacion del Moogle}
+\author{Gabriel Herrera Carrazana}
+\date{20/7/23}
+\usetheme{Warsaw}
+\usecolortheme{crane}
+\useoutertheme{shadow}
+\useinnertheme{rectangles}
+\usepackage{tikz}
+\usepackage{pgf-pie}
+\usepackage{multicol}
+
+\usepackage{cite}
+\bibliographystyle{plain}
+
+\title[Moogle]{Moogle}
+\subtitle{Proyecto de Programación}
+\author[Gabriel Herrera]{Gabriel Herrera Carrazana}
+\institute[MatCom] { Facultad de Matemática y Computación}
+\logo{\includegraphics[width=1cm]{matcom.jpg }}
+
+
+
+\begin{document}
+
+
+\itshape
+
+
+
+
+
+
+	\frame{\titlepage}
+	\begin{frame}{Índice}
+		\tableofcontents
+	\end{frame}
+	
+	
+	\begin{frame}
+	
+		
+		\frametitle{Moogle}
+		\section{¿Qué es el Moogle?}
+		
+			Moogle es una aplicación web escrita fundamentalmente con el lenguaje de programación C\# . Este nos permite indexar una base de datos de archivos .txt según la relevancia de palabras o frases .  \
+		
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Stack Tecnológico}{Lenguajes mas usados :}
+			\section{Stack Tecnológico}
+				
+		
+			\begin{figure}[htb]
+			\centering
+			\begin{tikzpicture}[scale=0.7]
+			\pie{58.8/C\#, 30.2/CSS, 11/HTML}
+			\end{tikzpicture}
+			\caption{Ejemplo de gráfico de pastel}
+			\label{fig:grafico_pastel}
+			\end{figure}
+		
+			
+		
+	
+
+	\end{frame}
+	\begin{frame}
+		\frametitle{Clases}
+			\section{Clases}
+			\begin{multicols}{2}
+			
+			\subsection{Clases Creadas}
+			Clases creadas :
+			\begin{itemize}
+				\item LoadDocuments.cs
+				\item Vector.cs
+				\item Matrix.cs
+			
+			\end{itemize}
+			\subsection{Clases Modificadas}
+			Clases Modificadas:
+				\begin{itemize}
+				\item SearchItem.cs
+				\item Moogle.cs
+				\end{itemize}
+					
+				
+					
+			\end{multicols}
+				
+		
+		
+	\end{frame}
+	\begin{frame}
+			\frametitle{Concluiones}
+		    \section{Conclusiones}
+			
+			Finalmente pudimos ver resultados satisfactorios. La aplicación es capáz de cargar hasta 50mb de datos y procesarlos en menos de un minuto. Las búsquedas son completadas en menos de 10 segundos . A pesar de ser un modelo básico de recuperación de datos , Moogle! ha demostrado ser un proyecto tanto instructivo como funcional. 
+	\end{frame}
+	
+
+\end{document}
+	  

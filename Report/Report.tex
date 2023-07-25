@@ -1,0 +1,161 @@
+\documentclass{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+	\title{Informe}
+	\date{2023-08-15}
+	\author{Gabriel Herrera Carrazana}
+	\maketitle
+	
+	\begin{center}
+	 
+		
+			 \textbf{Informe escrito del proyecto de programación de 1er año de Lic. en Ciencia de la Computación}\vspace{2em} 
+		
+	\begin{flushleft}
+	
+		Nombre del Proyecto: Moogle!\newline
+		Enlace de GitHub del proyecto : https://github.com/gabrielherreca/Moogle.git \vspace{0.5em}
+	\end{flushleft}	
+	\tableofcontents
+	\newpage
+	\begin{abstract}
+			Moogle! es una aplicación web cuyo propósito es buscar inteligentemente un texto en un conjunto de documentos. Está desarrollada con tecnología .NET Core 6.0, específicamente usando Blazor como framework web para la interfaz gráfica, y en el lenguaje C\#. La aplicación está dividida en dos componentes fundamentales: MoogleServer , un servidor web que renderiza la interfaz gráfica y sirve los resultados y MoogleEngine , una biblioteca de clases donde está implementada la lógica del algoritmo de búsqueda.
+	\end{abstract}
+	
+	\section{Introducción}
+	Los algoritmos de búsqueda y recuperadores de información son tecnologías fundamentales en el campo de la ciencia de la computación y de la información . Permiten encontrar información relevante en grandes conjuntos de datos, como documentos, páginas web o bases de datos.
+	    
+	
+		\section{Clases del Proyecto}	
+		Durante el desarrollo del proyecto fueron implementados en su totalidad una serie de clases y métodos y fueron modificados otros tantos.
+		\vspace{1em}
+		
+		\subsection{Creados por mi}
+		\begin{itemize}
+			\item Matrix.cs
+			\item Vector.cs
+			\item LoadDocuments.cs 
+			 
+		\end{itemize}
+		
+	
+		\subsection{Modificados}
+		\begin{itemize}
+			\item Moogle.cs			  
+			\item SearchItem.cs
+		\end{itemize}
+		
+	\vspace{1em}
+	\begin{flushleft}
+		
+	
+	\section{Explicación del Código}	
+	
+	\underline{LoadDocuments.cs :} 	
+		Aqui se encuentra la clase LoadDocuments donde se cargan y procesan los distintos textos con los que vamos a trabajar . Para esto nos apoyamos de una serie de métodos estáticos.\vspace{2em}
+		
+		\textit{ \large {Métodos:}} 
+		
+		
+		
+		
+		\vspace{1em}-Load :
+		En este método almacenamos las rutas de los documentos .txt usando el método GetFiles de la clase Directory .Luego almacenamos por cada ruta ,  el texto correspondiente usando método ReadAllText de la clase File. Finalmente se devuelve una lista de string , donde cada string representa el contenido de un documento .txt.\vspace{0.5em} 
+		
+		- Normalize :
+		Aquí usamos el método Split para separae cada documento en palabras . Luego se convierte cada palabra a minúsculas y se quitan los símbolos que estas puedan contener con el método Regex de System.Text.RegularExpressions . Finalmente añadimos cada palabra procesada a una lista de string y es lo que retorna el método .\vspace{0.5em}
+		
+		-DocumetList :
+		Este método devuelve una lista de listas de string , donde cada lista representa un documento y cada string representa cada palabra del documento ya procesada.\vspace{0.5em}
+		
+		- Vocabulary :
+		Este método devuelve un Hashset de string con cada palabra existente y sin repeticiones en nuestra colección de documentos . \vspace{0.5em}
+		
+		-DocumentVocabulary :
+		Devuelve un Hashset de string con cada palabra existente y sin repeticiones en un documento especifico que recibe como parámetro.
+		Este método sera útil para ser invocado en el método AllDocumentVocabulary() .\vspace{0.5em}
+		
+		- AllDocumentVocabulary:
+		Este método nos permite almacenar en una lista de  HashSet  , el vocabulario específico todos los documentos con los que se va a trabajar.\vspace{0.5em}
+		
+		-IDF :
+		Este método recorre cada parlabra del vocabulario obtenida con el método Vocabulary() y se añade a un diccionario con su valor de IDF( inverse document frecuency ) correspondiente que se calcula “log10((cantidad total de documentos)/(documentos en que aparece la palabra))”.\vspace{0.5em}
+		
+		– TF:
+		Este método devuelve una lista de diccionarios, cada diccionario representa un documento y  contiene cada palabra del texto asociado a su valor de TF(term frecuency) . El TF de una palabra se calcula “(repeticiones de la palabra en el documento) /(cantidad de palabras en el documento))”\vspace{0.5em}
+		
+		-TFOfDoc:
+		Este método se usa para el trabajo con la query. Añade a un diccionario cada palabra de la query con su valor de TF asociado.\vspace{0.5em}
+		
+		-QueryTF IDF:
+		Este método devuelve una diccionario que representa la query.El diccionario contine cada palabra del vocabulario asociada a su valor de TF IDF . Se verifica si la palabra del vocabulario esta en la query . Si esta contenida se calcula su valor de TF IDF a partir de la multiplicación de los valores de la palabra obtenidos en los métodos TFOfDoc() y IDF(). Si no esta contenida se añade la palabra al diccionario con un valor de TF-IDF asociado de 0 directamente , evitando cálculos inecesarios. \vspace{0.5em}
+		
+		-DictionaryTFIDF:
+		En este método creamos una lista de diccionarios , donde cada diccionario representa un documento , y cada diccionario contiene cada palabra del vocabulario asociado a su valor de TF-IDF . Se comprueba en cada documento , si cada palabra del vocabulario esta contenida en el docuemto . Si esta contenida de calcula su valor de TF IDF a partir de la multiplicación de los valores de la palabra obtenidos en los métodos TF() y IDF(). Si no esta contenida se añade la palabra al diccionario con un valor de TF-IDF asociado de 0 directamente , evitando cálculos inecesarios.\vspace{0.5em}
+		
+		-Titles:Este método contine los nombres de los documentos txt. de la carpeta content.\vspace{0.5em} 
+		
+		-Titles:
+		Devuelve una lista de string con los nombres de los documentos con los que se va a trabajar.
+		-Generate Snippets
+		Genera un snippet a partir de la primera palabra de la query y un documento.\vspace{0.5em}
+		
+		-Lists Of Snippets:
+		Genera un snippet por cada documento existente a partir de la primera palabra de la query.\vspace{0.5em}
+		
+		\vspace{4em}\underline{Vector.cs :}
+		En esta clase Vector creamos los objetos de tipo Vector , que reciben en su constructor un diccionario <string,decimal>. De esta manera podemos representar cada documento como un vector , que contiene cada una de las palabras del vocabulario asociado a su valor de TF-IDF.Tambien creamos varios métodos para el trabajo algebraico con los vectores que son los que nos permitirán calcular los Scores.\vspace{2em}
+		
+		\textit{ \large {Métodos:}} 
+		
+		\vspace{1em}-DotProduct :
+		Calcula el producto de punto entre dos vectores .Este se obtiene al sumar los productos componente por componente.\vspace{0.5em}
+		
+		-Magnitude:
+		Calcula la magitud de un vector. Este se expresa como la raíz cuadrada de la suma de cada componente elevada al cuadrado.\vspace{0.5em}
+		-MagnitudeProduct:
+		Calcula el producto entre la magnitud de dos vectores.Usa el método Magnitude explicado anteriormente.\vspace{0.5em}
+		
+		-CalculateSimilitudCoseno:
+		Este método calcula la similitud de cosenos entre dos vectores.Se obtiene al calcular el cociente entre el producto de punto entre los dos vectores y el producto de sus magnitudes.\vspace{4em}
+		
+		\underline{Matriz.cs :}
+		Aquí se encuentra la clase Matriz , donde creamos los objetos de tipo matriz. Estos reciben en su contructor una lista de objetos Vector .\vspace{2em}
+		
+		\textit{ \large {Métodos:}} 
+		
+		\vspace{0.5em}-ListforMatrix:
+		Este método nos devulve una lista de vectores que nos será útil para instanciar un objeto de tipo Matrix . De esta manera lograríamos tener un objeto que agrupa toda la información que necesitamos de los documentos para el calculo con la query.\vspace{0.5em}
+		
+		-Scores:
+		Este método nos devulve una lista de float con los los valores resultantes de calcular la similitud de cosenos entre cada vector de un obeto tipo Matrix y un vector . Este método lo usaremos posteriormente para obtener los scores entre cada documento y la query. \vspace{2em}
+		
+		\underline{SearchItem.cs :}
+			\textit{ \large {En esta clase fueron agregados algunos métodos:}}\vspace{1em}
+			 
+		-SearchItemList:
+		Este método nos devuelve una lista de objetos SearchItem. Cada objeto representa un documeto con su título , su valor de score respecto a la query y un snippet del texto donde aparece la query.Recibe como parametos una lista de float donde estarán los valores de score y un string que representa la query.  \vspace{0.5em}
+		
+		-SortByScoreDecending :
+		Es un método que ordena una lista de objetos SearchItem de manera descandente según el valor del parámetro Score.\vspace{0.5em}
+		
+		\vspace{4em}\underline{Moogle.cs :}
+		En esta clase primeramente instanciamos un objeto DocumentMatrix de tipo Matrix y le pasamos como argumento la lista de objetos Vector que nos devuelve el metodo ListforMatrix de la clase Matrix.
+		Dentro del método query instasnciamos un objeto Queryvector de tipo Vector y le pasamos como parámetro el método QueryTFIDF de la clase Load Documents . Asi conseguimos llevar la query a su representación vectoral. 
+		También creamos  una lista de float llamada Scores para copiar la lista de float que nos devuelve el método Scores de la clase Vector (calcula los valores de similitud de cosenos)  , pasándole como parámetros QueryVector y DocumentMatrix.
+		Por último igualamos el array de SearchItems Items a la lista de objetos SearchItem que nos devuelve SearchItemList (con los parámetros string query y List<float>Scores) luego de ser ordenada con el método SortByScoreDecending y convertida de lista a array con el métdo ToArray.
+		
+			
+	
+		
+	\section{Conclusiones}
+	
+	Finalmente pudimos ver resultados satisfactorios. La aplicación es capáz de cargar hasta 50mb de datos y procesarlos en menos de un minuto. Las búsquedas son completadas en menos de 10 segundos . A pesar de ser un modelo básico de recuperación de datos , Moogle! ha demostrado ser un proyecto tanto instructivo como funcional. 
+		
+		
+		
+	\end{flushleft}	
+	\end{center}
+\end{document}
