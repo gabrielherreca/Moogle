@@ -35,14 +35,17 @@ report() {
    cd Report
   
 pdflatex Report.tex
+pdflatex Report.tex
 
 }
 
 
 slides() {
+
   
   cd Slides
   
+pdflatex Slides.tex
 pdflatex Slides.tex
 
 }
@@ -52,37 +55,139 @@ show_report() {
   cd Report
   
 if [ ! -f "Report.pdf" ]; then
+cd ..
   report
 fi
 
-if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
-  start Report.pdf
-elif [[ "$OSTYPE" == "linux-gnu" ]]; then
-  xdg-open Report.pdf
+echo "¿Deseas usar la herramienta predeterminada para abrir el informe? (S/N)"
+  read respuesta
 
-fi
-
-
+  if [[ "$respuesta" == "S" || "$respuesta" == "s" ]]; then
+    if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+      start Report.pdf
+    elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+      xdg-open Report.pdf
+    fi
+  elif [[ "$respuesta" == "N" || "$respuesta" == "n" ]]; then
+    echo "Ingresa el comando de la herramienta que deseas utilizar:"
+    read herramienta
+    $herramienta Report.pdf
+  else
+    echo "Respuesta inválida. La herramienta predeterminada se utilizará para abrir el informe."
+    if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+      start Report.pdf
+    elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+      xdg-open Report.pdf
+    fi
+  fi
 }
+
+
+
 
 
 show_slides() {
   cd Slides
 
 if [ ! -f "Slides.pdf" ]; then
- 
+cd ..
+  slides
+fi
+
+echo "¿Deseas usar la herramienta predeterminada para abrir el informe? (S/N)"
+  read respuesta
+
+  if [[ "$respuesta" == "S" || "$respuesta" == "s" ]]; then
+    if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+      start Slides.pdf
+    elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+      xdg-open Slides.pdf
+    fi
+  elif [[ "$respuesta" == "N" || "$respuesta" == "n" ]]; then
+    echo "Ingresa el comando de la herramienta que deseas utilizar:"
+    read herramienta
+    $herramienta Slides.pdf
+  else
+    echo "Respuesta inválida. La herramienta predeterminada se utilizará para abrir el informe."
+    if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+      start Slides.pdf
+    elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+      xdg-open Slides.pdf
+    fi
+  fi
+}
+
+
+show_slides_c() {
+  cd Slides
+
+if [ ! -f "Slides.pdf" ]; then
+cd ..
   slides
 fi
 
 if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
-  start Slides.pdf
+    start Slides.pdf
+    
 elif [[ "$OSTYPE" == "linux-gnu" ]]; then
- 
-  xdg-open Slides.pdf
+    xdg-open Slides.pdf
+
+
 
 fi
    
 }
+
+show_report_c() {
+  cd Report
+
+if [ ! -f "Report.pdf" ]; then
+cd ..
+  report
+fi
+
+if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+    start Report.pdf
+    
+elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+    xdg-open Report.pdf
+
+
+
+fi
+   
+}
+   
+
+
+
+show_report_a() {
+  cd Report
+  
+if [ ! -f "Report.pdf" ]; then
+cd ..
+  report
+fi
+
+"$viewer" Report.pdf
+
+}
+
+
+show_slides_a() {
+  cd Slides
+
+if [ ! -f "Slides.pdf" ]; then
+cd ..
+  slides
+fi
+
+"$viewer" Slides.pdf
+   
+}
+
+
+
 
 show_menu() {
 
@@ -108,12 +213,48 @@ show_menu() {
   esac
 }
 
-while true;do
 
-cd ..
-clear
-show_menu
-done
+if [ $# -eq 0 ]; then
+  while true; do
+    cd ..
+    show_menu
+  done
 
-exit 0
+
+elif  [ $# -eq 1 ] || [ $# -eq 2 ]; then
+  viewer=$2
+  cd ..
+  if [ $# -eq 1 ] ; then
+  case $1 in
+    
+    "run") run ;;
+    "clean") clean ;;
+    "report") report ;;
+    "slides") slides ;;
+    "show_report") show_report_c ;;
+    "show_slides") show_slides_c ;;
+    *) echo "Opción inválida" ;;
+  esac
+  fi
+  if [ $# -eq 2 ] ; then  
+  case $1 in
+   
+    "run") run ;;
+    "clean") clean ;;
+    "report") report ;;
+    "slides") slides ;;
+    "show_report") show_report_a ;;
+    "show_slides") show_slides_a ;;
+    *) echo "Opción inválida" ;;
+  esac
+  fi
+else
+  echo "Cantidad inválida de argumentos"
+fi 
+exit 1
+
+
+
+
+
 
